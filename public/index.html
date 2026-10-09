@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Web Crawler</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Web Crawler</h1>
+      <p>Enter one or more seed URLs. The crawler follows links, respects robots.txt, waits between requests to the same site, and never indexes the same page twice.</p>
+    </header>
+
+    <form id="crawl-form" class="card">
+      <label class="full">
+        Seed URLs <span class="hint">(one per line)</span>
+        <textarea name="seeds" rows="3" required placeholder="https://example.com">https://example.com</textarea>
+      </label>
+      <label>Max pages <input name="maxPages" type="number" min="1" max="1000" value="50" /></label>
+      <label>Max depth <input name="maxDepth" type="number" min="0" max="10" value="2" /></label>
+      <label>Delay per site (ms) <input name="politenessMs" type="number" min="0" max="60000" step="100" value="1000" /></label>
+      <label>Concurrency <input name="concurrency" type="number" min="1" max="16" value="4" /></label>
+      <label class="checkbox"><input name="sameHost" type="checkbox" checked /> Stay on seed sites</label>
+      <div class="actions">
+        <button type="submit" id="start">Start crawl</button>
+        <button type="button" id="stop" class="secondary" disabled>Stop</button>
+        <a href="/api/results" id="download" class="button secondary" hidden>Download JSON</a>
+      </div>
+      <p id="form-error" class="error" hidden></p>
+    </form>
+
+    <section class="stats" aria-live="polite">
+      <div><span id="stat-status">Idle</span><small>Status</small></div>
+      <div><span id="stat-pages">0</span><small>Pages</small></div>
+      <div><span id="stat-files">0</span><small>Files</small></div>
+      <div><span id="stat-queued">0</span><small>Queued</small></div>
+      <div><span id="stat-skipped">0</span><small>Skipped</small></div>
+      <div><span id="stat-errors">0</span><small>Errors</small></div>
+    </section>
+
+    <section class="card">
+      <nav class="tabs" role="tablist">
+        <button role="tab" data-tab="pages" aria-selected="true">Pages</button>
+        <button role="tab" data-tab="files" aria-selected="false">Files</button>
+        <button role="tab" data-tab="skipped" aria-selected="false">Skipped</button>
+        <button role="tab" data-tab="errors" aria-selected="false">Errors</button>
+      </nav>
+      <input id="filter" type="search" placeholder="Filter results…" />
+
+      <table data-panel="pages">
+        <thead><tr><th>Title</th><th>URL</th><th>Depth</th><th>Links</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <table data-panel="files" hidden>
+        <thead><tr><th>URL</th><th>Type</th><th>Found on</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <table data-panel="skipped" hidden>
+        <thead><tr><th>URL</th><th>Reason</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <table data-panel="errors" hidden>
+        <thead><tr><th>URL</th><th>Error</th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <p id="empty" class="empty">Nothing here yet. Start a crawl above.</p>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
